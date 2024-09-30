@@ -67,6 +67,16 @@
             color: white;
             cursor: pointer;
         }
+        /*CSS för att få en box runt gamecounter*/
+        #gameCounter {
+            text-align: center;
+            font-size: 1.5rem;
+            margin: 40px;
+            margin-right: 32rem;
+            margin-left: 32rem;
+            color: black;
+            border: 2px solid black;
+        }
     </style>
 
 </head>
@@ -84,6 +94,10 @@
         <div id="celle7" class="celle"></div>
         <div id="celle8" class="celle"></div>
     </section>
+
+    <!--Gör en ruta som räknar antalet spelrundor. (Hjälp av chatgpt)-->
+    <section id="gameCounter">Antall spillrunder: <span id="counter">1</span></section> 
+
     <button id="newgame" onclick="restartGame()">Start spill på nytt</button>
 
     <script>
@@ -245,6 +259,8 @@
         }
 
         function sjekkVinner() {
+            //Fördröj tiden med 1s för att se om en spelar har vunnit.
+            setTimeout(function() {
             var rundenVunnet = false;
             //Vi må sjekke etter vinner for hver brikke som plasseres på brettet.
             // Dette gjør vi ved å gå gjennom alle vinnerkombinasjonene, og
@@ -268,21 +284,33 @@
                 //brikke3, er alle like, og vi har en vinnerkombinasjon. Da 
                 if(brikke1 === brikke2 && brikke2 === brikke3) {
                     rundenVunnet = true;
+                    //Samlade alla vinnande kombinationer. (Hjälp av chatgpt)
+                    vinnerKombinasjon = [vinnerKomboPlass1, vinnerKomboPlass2, vinnerKomboPlass3];
                     break;
                 }
             }
+
 
             //Hvis runden er vunnet, skal vi gjøre noen handlinger:
             if(rundenVunnet === true) {
                 //Skriv ut hvilken spiller som har vunnet
                 document.getElementById("playerturn").innerHTML = "Spiller " + player + " har vunnet!";
+                //Gör om bakgrundsfärgen i <span> - taggen till guldfärg när en spelare har vunnit.
+                document.getElementById("playerturn").style.backgroundColor = "#FFD700";
                 //Gjør restart spill-knappen synlig
                 document.getElementById("newgame").style.display = "block";
                 //Sett spillstatus til false, slik at ingen spillere får plassere
                 //flere brikker på brettet - dette løses med sjekken i funksjonen spill()
                 spillStatus = false;
+
+                //Ändra färgen på de vinnande märkerna. (Hjälp av chatgpt)
+                vinnerKombinasjon.forEach(function(index) {
+                document.getElementById("celle" + index).style.color = "#FFD700";
+                });
             }
-        }
+              //Fördröj tiden med 1s (1000 millisekunder).
+        }, 1000); 
+    }
 
         //Når et spill er avsluttet, og et nytt skal begynne, må vi gjøre klar en del ting:
         // 1) Fjerne brikkene som er plassert på brettet - både i grensesnittet og i programmet vårt
@@ -296,6 +324,9 @@
             var celleteller = 0;
             while (celleteller < 9) {
                 document.getElementById("celle" + celleteller).innerHTML = "";
+                // Gör så att färgerna på de vinnande brickorna går tillbaka till normal vid ny runda. (Hjälp av chatgpt)
+                document.getElementById("celle" + celleteller).style.color = "";  
+                document.getElementById("playerturn").style.backgroundColor = "";
                 celleteller++;
             }
             // 2)
@@ -305,6 +336,9 @@
             playermark = "X";
             // 4)
             document.getElementById("playerturn").innerHTML = 'Spiller <span id="player">1</span> (<span id="playermark">X</span>) sin tur:';
+            //Gör så att antal spelrundor uppdaterar sig. (Hjälp av chatgpt)
+            antallSpill++;
+            document.getElementById("counter").innerHTML = antallSpill; 
         }
     </script>
 </body>
